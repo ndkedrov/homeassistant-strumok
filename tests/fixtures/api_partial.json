@@ -1,0 +1,16 @@
+{
+  "dev": "SK-E89F6DB694F0",
+  "fw": "0.15.53",
+  "up": 512,
+  "heap": 51000,
+  "heapmin": 9000,
+  "evse": {
+    "status": "idle",
+    "cur": 0,
+    "on": 0,
+    "units": [
+      { "n": 0, "live": true, "ip": "192.168.1.42", "st": 1, "ok": true }
+    ]
+  },
+  "safe": 0
+}

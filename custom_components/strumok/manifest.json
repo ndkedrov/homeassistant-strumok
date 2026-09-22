@@ -1,0 +1,11 @@
+{
+  "domain": "strumok",
+  "name": "СтрумОК",
+  "codeowners": ["@ndkedrov"],
+  "config_flow": true,
+  "documentation": "https://strumok.app/",
+  "issue_tracker": "https://github.com/ndkedrov/strumok/issues",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "0.1.0"
+}

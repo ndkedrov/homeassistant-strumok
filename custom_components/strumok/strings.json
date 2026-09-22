@@ -1,0 +1,40 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Strumok",
+        "description": "Enter the local IP address or hostname of your Strumok EV charging station (the same address where its web panel opens). No port or authentication needed.",
+        "data": {
+          "host": "Host or IP address"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the station at this address. Check the IP and that the station is on the same network."
+    },
+    "abort": {
+      "already_configured": "This station is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "charging_state": { "name": "Charging state" },
+      "charging_current": { "name": "Charging current" },
+      "charging_power": { "name": "Charging power" },
+      "home_battery_soc": { "name": "Home battery state of charge" },
+      "pv_power": { "name": "Solar power" },
+      "battery_power": { "name": "Battery power" },
+      "grid_power": { "name": "Grid power" },
+      "load_power": { "name": "Load power" },
+      "wifi_rssi": { "name": "Wi-Fi signal strength" },
+      "uptime": { "name": "Uptime" },
+      "firmware_version": { "name": "Firmware version" }
+    },
+    "binary_sensor": {
+      "charging_allowed": { "name": "Charging allowed" },
+      "car_connected": { "name": "Car connected" },
+      "wifi_online": { "name": "Wi-Fi online" },
+      "inverter_bus_connected": { "name": "Inverter bus connected" }
+    }
+  }
+}

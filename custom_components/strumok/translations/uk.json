@@ -1,0 +1,40 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "СтрумОК",
+        "description": "Введіть локальну IP-адресу або хост зарядної станції СтрумОК у вашій мережі (та сама адреса, за якою відкривається веб-панель плати). Порт і автентифікація не потрібні.",
+        "data": {
+          "host": "Хост або IP-адреса плати"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Не вдалось підключитись до плати за цією адресою. Перевірте IP і те, що плата в тій самій мережі."
+    },
+    "abort": {
+      "already_configured": "Ця плата вже додана."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "charging_state": { "name": "Стан заряду" },
+      "charging_current": { "name": "Струм заряду" },
+      "charging_power": { "name": "Потужність заряду" },
+      "home_battery_soc": { "name": "Заряд домашньої батареї" },
+      "pv_power": { "name": "Потужність сонячних панелей" },
+      "battery_power": { "name": "Потужність батареї" },
+      "grid_power": { "name": "Потужність мережі" },
+      "load_power": { "name": "Потужність споживання" },
+      "wifi_rssi": { "name": "Рівень сигналу Wi-Fi" },
+      "uptime": { "name": "Час роботи" },
+      "firmware_version": { "name": "Версія прошивки" }
+    },
+    "binary_sensor": {
+      "charging_allowed": { "name": "Заряд дозволено" },
+      "car_connected": { "name": "Авто підключене" },
+      "wifi_online": { "name": "Wi-Fi онлайн" },
+      "inverter_bus_connected": { "name": "Шина інвертора підключена" }
+    }
+  }
+}
