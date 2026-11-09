@@ -1,30 +1,32 @@
 """Binary_sensor-платформа: булеві прапорці плати СтрумОК.
 
-Перелік і джерела полів — §2 спільного контракту
-`docs/HOME-ASSISTANT-DEVICE-INTEGRATION.md`.
+Перелік і джерела полів — §2 `docs/HOME-ASSISTANT-DEVICE-INTEGRATION.md`.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
     BinarySensorEntityDescription,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import parser
-from .const import DOMAIN
-from .coordinator import StrumokDataUpdateCoordinator
+from .coordinator import StrumokConfigEntry
 from .entity import StrumokEntity
+
+if TYPE_CHECKING:
+    # AddConfigEntryEntitiesCallback зʼявився в HA 2025.3; лише для типів,
+    # щоб компонент вантажився й на 2025.2 (мінімум у hacs.json).
+    from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+
+PARALLEL_UPDATES = 0
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -45,6 +47,12 @@ BINARY_SENSOR_DESCRIPTIONS: tuple[StrumokBinarySensorEntityDescription, ...] = (
         value_fn=parser.car_connected,
     ),
     StrumokBinarySensorEntityDescription(
+        key="grid_present",
+        translation_key="grid_present",
+        device_class=BinarySensorDeviceClass.POWER,
+        value_fn=parser.grid_present,
+    ),
+    StrumokBinarySensorEntityDescription(
         key="wifi_online",
         translation_key="wifi_online",
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
@@ -63,36 +71,24 @@ BINARY_SENSOR_DESCRIPTIONS: tuple[StrumokBinarySensorEntityDescription, ...] = (
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    entry: StrumokConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator: StrumokDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = entry.runtime_data
     async_add_entities(
         StrumokBinarySensor(coordinator, description)
         for description in BINARY_SENSOR_DESCRIPTIONS
     )
 
 
-class StrumokBinarySensor(
-    StrumokEntity, CoordinatorEntity[StrumokDataUpdateCoordinator], BinarySensorEntity
-):
-    """Один READ-ONLY binary_sensor плати СтрумОК."""
+class StrumokBinarySensor(StrumokEntity, BinarySensorEntity):
+    """Один binary_sensor плати СтрумОК (лише читання)."""
 
     entity_description: StrumokBinarySensorEntityDescription
 
-    def __init__(
-        self,
-        coordinator: StrumokDataUpdateCoordinator,
-        description: StrumokBinarySensorEntityDescription,
-    ) -> None:
-        CoordinatorEntity.__init__(self, coordinator)
-        StrumokEntity.__init__(self, coordinator)
-        self.entity_description = description
-        self._attr_unique_id = f"{self._entity_prefix}_{description.key}"
-
     @property
     def is_on(self) -> bool | None:
-        return self.entity_description.value_fn(self.coordinator.data or {})
+        return self.entity_description.value_fn(self.data)
 
     @property
     def available(self) -> bool:

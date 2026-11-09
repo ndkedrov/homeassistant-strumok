@@ -1,40 +1,226 @@
 {
   "config": {
+    "flow_title": "{name}",
     "step": {
       "user": {
-        "title": "Strumok",
-        "description": "Enter the local IP address or hostname of your Strumok EV charging station (the same address where its web panel opens). No port or authentication needed.",
+        "title": "Strumok station",
+        "description": "Connect a Strumok EV charging station on your local network. Stations are usually found automatically — check Discovered on the Devices & services page first.",
         "data": {
-          "host": "Host or IP address"
+          "host": "Host or IP address",
+          "api_key": "API key"
+        },
+        "data_description": {
+          "host": "Local IP address or hostname of the station, the same address where its web panel opens (e.g. 192.168.1.57). Port 80 is used automatically.",
+          "api_key": "Optional. Needed to control charging from Home Assistant, and to read data if reading without sign-in is closed on the station. Create a key for Home Assistant in the station web panel (Station protection → API keys); it starts with sk_."
+        }
+      },
+      "discovery_confirm": {
+        "title": "Strumok station found",
+        "description": "Add station {name} ({host}) to Home Assistant? Leave the API key empty to get sensors only; with a key you can also control charging.",
+        "data": {
+          "api_key": "API key"
+        },
+        "data_description": {
+          "api_key": "Optional. Needed to control charging from Home Assistant, and to read data if reading without sign-in is closed on the station. Create a key for Home Assistant in the station web panel (Station protection → API keys); it starts with sk_."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Station rejected the API key",
+        "description": "Station {name} ({host}) answered 401: sign-in is enabled and the key is missing, revoked or wrong. Create a new key for Home Assistant in the station web panel (Station protection → API keys) and paste it here.",
+        "data": {
+          "api_key": "API key"
+        },
+        "data_description": {
+          "api_key": "The key starts with sk_ and is shown only once, when it is created."
+        }
+      },
+      "reconfigure": {
+        "title": "Change station {name}",
+        "description": "Change the address or the API key. Leave the key empty to keep the current one.",
+        "data": {
+          "host": "Host or IP address",
+          "api_key": "API key"
+        },
+        "data_description": {
+          "host": "Local IP address or hostname of the station, the same address where its web panel opens (e.g. 192.168.1.57). Port 80 is used automatically.",
+          "api_key": "Optional. Needed to control charging from Home Assistant, and to read data if reading without sign-in is closed on the station. Create a key for Home Assistant in the station web panel (Station protection → API keys); it starts with sk_."
         }
       }
     },
     "error": {
-      "cannot_connect": "Could not connect to the station at this address. Check the IP and that the station is on the same network."
+      "cannot_connect": "Could not reach the station at this address. Check the IP and that the station is on the same network as Home Assistant.",
+      "invalid_auth": "The station rejected this API key. Check it or create a new one in the station web panel.",
+      "auth_required": "Reading without sign-in is closed on this station — enter an API key.",
+      "invalid_key_format": "A station API key starts with sk_.",
+      "not_strumok": "A device answers at this address, but it is not a Strumok station.",
+      "unknown": "Unexpected error. See the Home Assistant log."
     },
     "abort": {
-      "already_configured": "This station is already configured."
+      "already_configured": "This station is already added. Its address has been updated if it changed.",
+      "already_in_progress": "This station is already being set up.",
+      "cannot_connect": "Could not reach the discovered station.",
+      "not_strumok": "The discovered device is not a Strumok station.",
+      "not_ipv4_address": "Only IPv4 addresses are supported.",
+      "reauth_successful": "API key updated.",
+      "reconfigure_successful": "Station settings updated.",
+      "unique_id_mismatch": "A different station answers at this address. Add it as a new integration instead."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Polling",
+        "description": "How often Home Assistant reads the station. Applies immediately, no restart needed.",
+        "data": {
+          "scan_interval": "Polling interval"
+        },
+        "data_description": {
+          "scan_interval": "From 5 to 300 seconds; 15 by default. The station has little memory — do not poll more often than you need."
+        }
+      }
     }
   },
   "entity": {
     "sensor": {
-      "charging_state": { "name": "Charging state" },
-      "charging_current": { "name": "Charging current" },
-      "charging_power": { "name": "Charging power" },
-      "home_battery_soc": { "name": "Home battery state of charge" },
-      "pv_power": { "name": "Solar power" },
-      "battery_power": { "name": "Battery power" },
-      "grid_power": { "name": "Grid power" },
-      "load_power": { "name": "Load power" },
-      "wifi_rssi": { "name": "Wi-Fi signal strength" },
-      "uptime": { "name": "Uptime" },
-      "firmware_version": { "name": "Firmware version" }
+      "charging_state": {
+        "name": "Charging state",
+        "state": {
+          "no_data": "No data",
+          "ready": "Ready, no car",
+          "waiting": "Car connected, waiting",
+          "charging": "Charging",
+          "pilot_d": "Pilot state D",
+          "pilot_e": "Pilot state E",
+          "pilot_f": "Pilot state F",
+          "leakage": "Current leakage",
+          "no_ground": "No ground",
+          "overheat_system": "System overheat",
+          "overheat_plug": "Plug overheat",
+          "overheat_relay": "Relay overheat",
+          "overcurrent": "Overcurrent",
+          "overvoltage": "Overvoltage",
+          "undervoltage": "Undervoltage",
+          "limit_time": "Limited by time limit",
+          "limit_energy": "Limited by energy limit",
+          "limit_money": "Limited by cost limit",
+          "schedule_1": "Limited by schedule 1",
+          "schedule_2": "Limited by schedule 2",
+          "blocked": "Charging stopped",
+          "relay_error": "Relay error",
+          "adaptive_limit": "Limited by adaptive mode",
+          "unknown": "Unknown"
+        }
+      },
+      "charging_current": {
+        "name": "Charging current"
+      },
+      "charging_power": {
+        "name": "Charging power"
+      },
+      "charging_session_energy": {
+        "name": "Session energy"
+      },
+      "home_battery_soc": {
+        "name": "Home battery state of charge"
+      },
+      "pv_power": {
+        "name": "Solar power"
+      },
+      "battery_power": {
+        "name": "Battery power"
+      },
+      "grid_power": {
+        "name": "Grid power"
+      },
+      "grid_state": {
+        "name": "Grid state",
+        "state": {
+          "absent": "No grid",
+          "unstable": "Grid unstable",
+          "normal": "Grid normal"
+        }
+      },
+      "grid_state_reason": {
+        "name": "Grid instability reason",
+        "state": {
+          "none": "None",
+          "voltage_low": "Voltage too low",
+          "voltage_high": "Voltage too high",
+          "phase_missing": "Phase missing",
+          "reconnecting": "Inverter checking the grid",
+          "inverter_off": "Inverter disconnected from the grid"
+        }
+      },
+      "load_power": {
+        "name": "Load power"
+      },
+      "wifi_rssi": {
+        "name": "Wi-Fi signal strength"
+      },
+      "uptime": {
+        "name": "Uptime"
+      },
+      "firmware_version": {
+        "name": "Firmware version"
+      }
     },
     "binary_sensor": {
-      "charging_allowed": { "name": "Charging allowed" },
-      "car_connected": { "name": "Car connected" },
-      "wifi_online": { "name": "Wi-Fi online" },
-      "inverter_bus_connected": { "name": "Inverter bus connected" }
+      "charging_allowed": {
+        "name": "Charging allowed"
+      },
+      "car_connected": {
+        "name": "Car connected"
+      },
+      "grid_present": {
+        "name": "Grid"
+      },
+      "wifi_online": {
+        "name": "Wi-Fi online"
+      },
+      "inverter_bus_connected": {
+        "name": "Inverter bus connected"
+      }
+    },
+    "switch": {
+      "charging_enabled": {
+        "name": "Charging"
+      }
+    },
+    "number": {
+      "charging_current": {
+        "name": "Charging current limit"
+      }
+    },
+    "button": {
+      "phase_reset": {
+        "name": "Re-detect charger phase"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "The station rejected the request (401). Enter a valid API key."
+    },
+    "update_failed": {
+      "message": "Could not read the station at {host}: {error}"
+    },
+    "cannot_connect": {
+      "message": "Station {host} does not respond."
+    },
+    "command_auth_failed": {
+      "message": "The station rejected the API key. Re-authentication has been started — enter a new key in Devices & services."
+    },
+    "command_invalid": {
+      "message": "The station rejected the value: {message}"
+    },
+    "command_conflict": {
+      "message": "The station cannot run the command now: {message}"
+    },
+    "command_unsupported": {
+      "message": "This station firmware does not accept local commands. Update the firmware."
+    },
+    "command_failed": {
+      "message": "The station did not accept the command: {message}"
     }
   }
 }

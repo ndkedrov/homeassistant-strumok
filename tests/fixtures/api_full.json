@@ -17,15 +17,26 @@
     "src": "local",
     "age": 4
   },
-  "bus": { "connected": true },
-  "wifi": { "on": true, "ip": "192.168.1.30", "rssi": -58 },
+  "bus": {
+    "connected": true
+  },
+  "wifi": {
+    "on": true,
+    "ip": "192.168.1.30",
+    "rssi": -58
+  },
   "evse": {
     "status": "charging",
     "cur": 16,
-    "kw": 3.68,
+    "kw": 3680,
     "on": 1,
     "units": [
-      { "n": 0, "live": true, "ip": "192.168.1.42", "car": true }
+      {
+        "n": 0,
+        "live": true,
+        "ip": "192.168.1.42",
+        "car": true
+      }
     ]
   },
   "safe": 0

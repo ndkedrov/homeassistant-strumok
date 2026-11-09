@@ -1,10 +1,4 @@
-# Тестові залежності для `tests/test_parser.py`.
-#
-# Навмисно НЕ включає `homeassistant` — тести перевіряють лише
-# `custom_components/strumok/parser.py` (чисті функції без залежності від
-# HA-рантайму), щоб не тягнути важкий пакет заради перевірки того, що
-# розбір JSON толерантний до відсутніх ключів. Реальні HA-сутності
-# (sensor.py/binary_sensor.py/config_flow.py/coordinator.py) перевіряє
-# сам Home Assistant при завантаженні інтеграції — так само, як і будь-який
-# інший custom_component.
-pytest>=7.4
+# Тестові залежності: справжній Home Assistant + його тестові фікстури
+# (hass, aioclient_mock, MockConfigEntry). Версія пакета тягне точну версію
+# homeassistant; 0.13.366 → homeassistant 2026.9.3 (Python ≥ 3.14.2).
+pytest-homeassistant-custom-component==0.13.366

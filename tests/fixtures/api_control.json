@@ -1,0 +1,53 @@
+{
+  "dev": "SK-E89F6DB694F0",
+  "fw": "0.16.2",
+  "up": 183920,
+  "heap": 42996,
+  "heapmin": 8180,
+  "live": {
+    "m": {
+      "pv_power_w": 1240,
+      "pv_voltage_v": 358.2,
+      "batt_soc_pct": 67,
+      "batt_power_w": -320,
+      "grid_power_w": 0,
+      "load_power_w": 920
+    },
+    "map": "deye-hybrid",
+    "src": "local",
+    "age": 4
+  },
+  "bus": {
+    "connected": true
+  },
+  "wifi": {
+    "on": true,
+    "ip": "192.168.1.30",
+    "rssi": -58
+  },
+  "evse": {
+    "status": "charging",
+    "cur": 16,
+    "kw": 3680,
+    "on": 1,
+    "units": [
+      {
+        "n": 0,
+        "live": true,
+        "ip": "192.168.1.42",
+        "car": true
+      }
+    ],
+    "min_a": 6,
+    "max": 32,
+    "session_kwh": 4.25
+  },
+  "safe": 0,
+  "cfg": {
+    "evse_auto": 3,
+    "battery": 1
+  },
+  "auth": {
+    "enabled": true
+  }
+}

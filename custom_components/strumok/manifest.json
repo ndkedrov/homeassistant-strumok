@@ -3,9 +3,15 @@
   "name": "СтрумОК",
   "codeowners": ["@ndkedrov"],
   "config_flow": true,
-  "documentation": "https://strumok.app/",
-  "issue_tracker": "https://github.com/ndkedrov/strumok/issues",
+  "dhcp": [
+    { "hostname": "strumok-*" },
+    { "registered_devices": true }
+  ],
+  "documentation": "https://strumok.app/device/home-assistant/hacs",
+  "integration_type": "device",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/ndkedrov/homeassistant-strumok/issues",
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.3.0",
+  "zeroconf": ["_strumok._tcp.local."]
 }
